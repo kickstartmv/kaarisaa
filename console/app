@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Console Task Runner
+ * @author Ahmed Ali <ajaaibu@gmail.com>
+ * @date 27-04-2014 01:57 AM
+ */
+
+// set to run indefintely if needed
+set_time_limit(0);
+
+date_default_timezone_set("Indian/Maldives");
+
+// include the composer autoloader
+require_once __DIR__ .'/../vendor/autoload.php';
+
+// import symfony console application
+use Symfony\Component\Console\Application;
+
+$app = new Application();
+
+// scan the commands directory
+$files = scandir(__DIR__ . "/commands");
+
+foreach($files as $file){
+
+  if(!is_dir($file)){ // add command if not a directory
+    $commandName = "Kaarisaa\Commands\\".basename(substr($file,0,strpos($file,".")));
+
+    $app->add(new $commandName); // hook up the command to application
+  }
+}
+// run the application
+$app->run();

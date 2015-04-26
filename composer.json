@@ -1,0 +1,13 @@
+{
+  "name" : "kickstartmv/kaarisaa",
+  "description" : "Crisis Management Tool",
+  "keywords" : ["kickstartmv", "kaarisaa"],
+  "require": {
+      "symfony/console": "~2.6"
+  },
+  "autoload": {
+    "psr-4": { 
+      "Kaarisaa\\Commands\\" : "console/commands/"
+    }
+  }
+}
