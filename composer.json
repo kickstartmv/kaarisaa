@@ -3,11 +3,13 @@
   "description" : "Crisis Management Tool",
   "keywords" : ["kickstartmv", "kaarisaa"],
   "require": {
-      "symfony/console": "~2.6"
+      "symfony/console": "~2.6",
+    "symfony/yaml": "~2.6"
   },
   "autoload": {
     "psr-4": { 
-      "Kaarisaa\\Commands\\" : "console/commands/"
+      "Kaarisaa\\Console\\" : "console/",
+      "Kaarisaa\\Senders\\" : "send/"
     }
   }
 }

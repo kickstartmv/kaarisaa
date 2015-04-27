@@ -1,0 +1,10 @@
+#*** CONFIG ***#
+#---- DB CONFIG ----#
+db_server: 192.168.1.131
+db_user: "root"
+db_pass: ""
+db_name: "nepalrelief"
+#---- SMS DRIVER CONFIG ---#
+sms_driver: "Kaarisaa\Senders\Dhiraagu"
+sms_user: ""
+sms_pass: ""

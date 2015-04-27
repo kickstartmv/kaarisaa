@@ -15,21 +15,15 @@ date_default_timezone_set("Indian/Maldives");
 // include the composer autoloader
 require_once __DIR__ .'/../vendor/autoload.php';
 
-// import symfony console application
-use Symfony\Component\Console\Application;
+use Kaarisaa\Console\KaarisaaConsole;
 
-$app = new Application();
+use Symfony\Component\Yaml\Yaml;
 
-// scan the commands directory
-$files = scandir(__DIR__ . "/commands");
+$configFile = __DIR__.'/../config.yml';
 
-foreach($files as $file){
+$config = Yaml::parse(file_get_contents($configFile));
 
-  if(!is_dir($file)){ // add command if not a directory
-    $commandName = "Kaarisaa\Commands\\".basename(substr($file,0,strpos($file,".")));
-
-    $app->add(new $commandName); // hook up the command to application
-  }
-}
-// run the application
+$app = new KaarisaaConsole();
+$app->setConfig($config);
+$app->loadCommands();
 $app->run();
