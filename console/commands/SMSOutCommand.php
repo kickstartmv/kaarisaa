@@ -38,7 +38,7 @@ EOT
   }
 
   protected function execute(InputInterface $input, OutputInterface $output){
-    $output->writeln("Hello world, " . $input->getOption('name'));
+
   }
 }
 ?>

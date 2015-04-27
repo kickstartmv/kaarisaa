@@ -17,13 +17,6 @@ require_once __DIR__ .'/../vendor/autoload.php';
 
 use Kaarisaa\Console\KaarisaaConsole;
 
-use Symfony\Component\Yaml\Yaml;
-
-$configFile = __DIR__.'/../config.yml';
-
-$config = Yaml::parse(file_get_contents($configFile));
-
 $app = new KaarisaaConsole();
-$app->setConfig($config);
-$app->loadCommands();
+$app->boot();
 $app->run();

@@ -1,14 +1,21 @@
 <?php
 namespace Kaarisaa\Console;
 
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Console\Application;
 
 class KaarisaaConsole extends Application {
 
   protected $config;
 
-  public function loadCommands(){
-  
+  public function boot(){
+
+    $configFile = __DIR__.'/../config.yml';
+
+    $config = Yaml::parse(file_get_contents($configFile));
+
+    $this->config = $config;
+
     $files = scandir(__DIR__ . "/commands");
 
     foreach($files as $file){
