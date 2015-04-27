@@ -17,6 +17,8 @@ class Dhiraagu {
 	private $username;
 	private $password;
 
+  public $test = "test";
+
   /**
    * Intializes the class with the given credentials
    */
@@ -113,7 +115,7 @@ class Dhiraagu {
 
 		$parts = $this->splitMessage($message);
     
-    $xml = $this->prepareXML('messages' => $parts);
+    $xml = $this->prepareXML($parts);
 
 		$this->curlPost($xml);
 	}
@@ -252,7 +254,7 @@ class Dhiraagu {
    * Populates the XML required for Dhiraagu SMS Push Request
    * @returns string xml
    */
-  public function prepareXML(){
+  public function prepareXML($messages){
   
   $xml = <<<END
 <?xml version="1.0" encoding="UTF-8" ?>

@@ -8,6 +8,8 @@ class KaarisaaConsole extends Application {
 
   protected $config;
 
+  protected $conn;
+
   public function boot(){
 
     $configFile = __DIR__.'/../config.yml';
@@ -15,6 +17,21 @@ class KaarisaaConsole extends Application {
     $config = Yaml::parse(file_get_contents($configFile));
 
     $this->config = $config;
+
+    // setup doctrine config
+
+    $dConfig = new \Doctrine\DBAL\Configuration();
+
+    $connectionParams = [
+      'dbname' => $this->getConfig('db_name'),
+      'user' => $this->getConfig('db_user'),
+      'password' => $this->getConfig('db_pass'),
+      'host' => $this->getConfig('db_server'),
+      'driver' => $this->getConfig('db_driver')
+    ];
+
+    // establish doctrine db connection
+    $this->conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $dConfig);
 
     $files = scandir(__DIR__ . "/commands");
 
@@ -36,6 +53,10 @@ class KaarisaaConsole extends Application {
     
     return $key == null ? $this->config : $this->config[$key];
 
+  }
+
+  public function DB(){
+    return $this->conn;
   }
 }
 ?>

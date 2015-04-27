@@ -5,7 +5,8 @@
   "require": {
       "symfony/console": "~2.6",
     "symfony/yaml": "~2.6",
-    "mandrill/mandrill": "~1.0"
+    "mandrill/mandrill": "~1.0",
+    "doctrine/dbal": "~2.5"
   },
   "autoload": {
     "psr-4": { 

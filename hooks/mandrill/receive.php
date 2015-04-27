@@ -35,9 +35,11 @@ if(!empty($_POST)){
 
 
     $output = new ConsoleOutput();
+
+
+    $command->run($input,$output);
   }
 
-  $command->run($input,$output);
 
 }
 else
