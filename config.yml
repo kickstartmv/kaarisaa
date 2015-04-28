@@ -9,3 +9,6 @@ db_driver: "pdo_mysql"
 sms_driver: "Kaarisaa\Senders\Dhiraagu"
 sms_user: ""
 sms_pass: ""
+#---- EMAIL DRIVER CONFIG --#
+email_driver: "Kaarisaa\Drivers\Send"
+email_api_token: "vJn9Xl7YhPsIK7HXezBU9Q"

@@ -20,10 +20,10 @@ use Symfony\Component\Console\Output\StreamOutput;
 //use Mandrill;
 
 
-class EmailSendCommand extends Command {
+class MailSendCommand extends Command {
   
   protected function configure(){
-      $this->setName("email:send")
+      $this->setName("mail:send")
            ->setDescription("Sends Emails via Mandrill")
            ->setHelp(<<<EOT
 Refer docs - Email Send via Mandrill
@@ -108,8 +108,8 @@ EOT
       $email->setFromName('nprelief');
       $output->writeln('Outbound email From Name set to: <info>'.$email->from_name.'</info>');
 
-      $output->writeln('Prepped and handed over to mail driver. Delivery reports will be displayed shortly'); 
       $email->sendEmail($recipients,$token);
+      $output->writeln('Prepped and handed over to mail driver');
       
     }
   }
