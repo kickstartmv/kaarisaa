@@ -23,19 +23,19 @@ if(!empty($_POST)){
 
   $app = new KaarisaaConsole();
   $app->boot();
-  $command = $app->get('email:rcv');
+  $command = $app->get('message:receive');
   
   foreach($posted_data as $email_data){
     $input = new ArrayInput(array(
-                          'command' => 'email:rcv',
-                          '--ts'    => $email_data['ts'],
-                          '--msg'   => $email_data['msg']
+                          'command' => 'message:receive',
+                          'timestamp'    => date('Y-m-d H:i:s',$email_data['ts']),
+                          'message'   => $email_data['msg'],
+                          'sender' => $email_data['from_email']
                           )
                         );
 
 
     $output = new ConsoleOutput();
-
 
     $command->run($input,$output);
   }
