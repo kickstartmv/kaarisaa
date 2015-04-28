@@ -20,7 +20,7 @@ class SMSSendCommand extends Command {
     $this->setName("sms:send")
          ->setDescription("Sends the SMS's in the outgoing queue")
          ->setDefinition(array(
-            new InputOption('limit','l',InputOption::VALUE_OPTIONAL,'Send Limit', 10)
+            new InputArgument('limit',InputArgument::OPTIONAL,'Send Limit', 10)
          ))
          ->setHelp(<<<EOT
 Sends the SMS's in the outgoing queue
@@ -30,7 +30,7 @@ Usage:
 <info>console sms:send </info>
 
 You can also set the number of sms to send per run
-<info>console sms:send l 10</info>
+<info>console sms:send 10</info>
 
 This command can be configured run in the background as a crontab
 EOT
@@ -43,52 +43,57 @@ EOT
     $sms = new $sender($this->getApplication()->getConfig('sms_user'),$this->getApplication()->getConfig('sms_pass'));
 
     $db = $this->getApplication()->DB();
-
-    $messages = $db->fetchAll("select * from message_out");
-
-    foreach($messages as $message){
-      
-      $subscribers = [];
-
-      // get subscribers for the persons
-      $personSubs = $db->fetchAll("select user_id from subscriptions where sub_person in (".$message['persons'].")");
-      
-      foreach($personSubs as $pSub){
-        array_push($subscribers,$pSub['user_id']);
-      }
-
-      // get subscribers to the location
-      $locationSubs = $db->fetchAll("select user_id from subscriptions where sub_location in (".$message['locations'].")");
-
-      foreach($locationSubs as $lSub){
-        array_push($subscribers,$lSub['user_id']);
-      }
-
-      $ignore = implode($subscribers,",");
-
-      $others = $db->fetchAll("select user_id from subscriptions where sub_location is null and sub_person is null and user_id NOT IN (".$ignore.")");
-
-      foreach($others as $oSub){
-        array_push($subscribers,$oSub['user_id']);
-      }
-
-      $finalList = array_unique($subscribers);
-
-
-      foreach($finalList as $sub){
-        $query = $db->executeQuery("select * from user where id = ? limit 1",[$sub]);
+  
+    $messages = $db->fetchAll("select * from message_out limit ?",[$input->getArgument('limit')]);
+    
+    if($messages->rowCount()){
+      foreach($messages as $message){
         
-        $user = $query->fetch();
+        $subscribers = [];
 
-        if(empty($user['phone'])){
-          $output->writeln("No phone number, ignoring...");
+        // get subscribers for the persons
+        $personSubs = $db->fetchAll("select user_id from subscriptions where sub_person in (?)",[$message['persons']]);
+        
+        foreach($personSubs as $pSub){
+          array_push($subscribers,$pSub['user_id']);
         }
-        else{
-          $output->writeln("Sending to " . $user['username']. " - " . $user['phone']);
-          $sms->sendMessage($message['message'],$user['phone']);
+
+        // get subscribers to the location
+        $locationSubs = $db->fetchAll("select user_id from subscriptions where sub_location in (?)",[$message['locations']]);
+
+        foreach($locationSubs as $lSub){
+          array_push($subscribers,$lSub['user_id']);
         }
+
+        $ignore = implode($subscribers,",");
+
+        $others = $db->fetchAll("select user_id from subscriptions where sub_location is null and sub_person is null and user_id NOT IN (?)",[$ignore]);
+
+        foreach($others as $oSub){
+          array_push($subscribers,$oSub['user_id']);
+        }
+
+        $finalList = array_unique($subscribers);
+
+
+        foreach($finalList as $sub){
+          $query = $db->executeQuery("select * from user where id = ? limit 1",[$sub]);
+          
+          $user = $query->fetch();
+
+          if(empty($user['phone'])){
+            $output->writeln("No phone number, ignoring...");
+          }
+          else{
+            $output->writeln("Sending to " . $user['username']. " - " . $user['phone']);
+            $sms->sendMessage($message['message'],$user['phone']);
+          }
+        }
+
       }
-
+    }
+    else{
+      $output->writeln("No messages to send");
     }
 
   }
