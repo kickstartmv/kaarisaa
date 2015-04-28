@@ -5,7 +5,8 @@ namespace Kaarisaa\Senders;
  * @author - Ahmed Ali <ajaaibu@gmail.com>
  * @date - 27-04-2015 05:36 AM
  */
-class Dhiraagu {
+
+class Dhiraagu extends MessageSender {
 
 	private $number;
 	private $keyword;
@@ -22,7 +23,7 @@ class Dhiraagu {
   /**
    * Intializes the class with the given credentials
    */
-	public function __construct($username,$password){
+	public function __construct($username=null,$password=null){
 		$this->username = $username;
 		$this->password = $password;
 	}
@@ -117,7 +118,7 @@ class Dhiraagu {
     
     $xml = $this->prepareXML($parts);
 
-		$this->curlPost($xml);
+		return $this->curlPost($xml);
 	}
 
 	public function normalize($string){
